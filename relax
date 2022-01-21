@@ -1,0 +1,71 @@
+cat > scf.in << EOF
+
+&control
+   calculation = 'vc-relax' ,
+   prefix = 'pwscf' ,
+   outdir = 'OUT/' ,
+   pseudo_dir = 'pseudo/' ,
+   disk_io = 'none' ,
+   etot_conv_thr = 1.0d-10 ,
+   forc_conv_thr = 1.0d-5 ,
+/
+&system
+   ibrav = 0 ,
+   ecutwfc = 80 , 
+   occupations = 'smearing' ,
+   smearing = 'mp',
+   degauss = 0.02 ,
+   nat = 14 , 
+   ntyp = 3 , 
+/
+&electrons
+   conv_thr = 1.0d-8 ,
+   diagonalization = 'cg' ,
+   mixing_mode = 'plain' ,
+   startingpot = 'atomic' ,
+   startingwfc = 'atomic+random' ,
+   mixing_beta = 0.6 ,
+/
+&ions
+   ion_dynamics = 'bfgs' ,
+/
+&cell
+   cell_dynamics = 'bfgs' ,
+   cell_factor = 4.0 ,
+   press = 2000 ,
+   press_conv_thr = 1.0d-3 ,
+   cell_dofree = 'all',
+/
+ATOMIC_SPECIES
+Mg  24.305   Mg.pbe-spnl-rrkjus_psl.1.0.0.UPF
+Ca  40.078   Ca.pbe-spn-rrkjus_psl.1.0.0.UPF 
+H    1.008    H.pbe-rrkjus_psl.1.0.0.UPF
+
+CELL_PARAMETERS {angstrom}
+3.5199999809         0.0000000000         0.0000000000
+0.0000000000         3.5199999809         0.0000000000
+0.0000000000         0.0000000000         3.5199999809
+
+ATOMIC_POSITIONS {crystal}
+Mg     0.000000000         0.000000000         0.000000000     
+Ca     0.500000000         0.500000000         0.500000000    
+H      0.000000000         0.500000000         0.749999966   
+H      0.000000000         0.500000000         0.250000000   
+H      0.749999966         0.000000000         0.500000000   
+H      0.250000000         0.000000000         0.500000000   
+H      0.500000000         0.749999966         0.000000000   
+H      0.500000000         0.250000000         0.000000000   
+H      0.500000000         0.000000000         0.250000000   
+H      0.500000000         0.000000000         0.749999966   
+H      0.000000000         0.749999966         0.500000000   
+H      0.000000000         0.250000000         0.500000000   
+H      0.749999966         0.500000000         0.000000000   
+H      0.250000000         0.500000000         0.000000000   
+
+
+K_POINTS automatic
+8 8 8 0 0 0
+
+EOF
+
+# mpirun -np 14 pw.x < scf.in > scf.out
